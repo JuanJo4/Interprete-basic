@@ -43,13 +43,23 @@ identificador	= {letra}({letra}|{digito})+
 nuevalinea	= \n | \n\r | \r\n
 espacio		= [ \t]+
 %%
+"rem"           {	if(debug) System.out.println("token COMENTARIO"); /*No tomo en cuenta los comentarios*/
+			}
+"'"           	{	if(debug) System.out.println("token COMENTARIO"); /*No tomo en cuenta los comentarios*/
+			}
 "\""            {	if(debug) System.out.println("token QMARK");
 			return sym.QMARK;
 			}
-"end"           {	if(debug) System.out.println("token END");
+"procedure"	{	if(debug) System.out.println("token PROCEDURE");
+			return sym.PROCEDURE;
+			}
+"end procedure"	{	if(debug) System.out.println("token END_PROCEDURE");
+			return sym.END_PROCEDURE;
+			}
+"end"		{	if(debug) System.out.println("token END");
 			return sym.END;
 			}
-"if"            {	if(debug) System.out.println("token IF");
+"if"		{	if(debug) System.out.println("token IF");
 			return sym.IF;
 			}
 "then"          { 	if(debug) System.out.println("token THEN");
@@ -109,10 +119,8 @@ espacio		= [ \t]+
 "not"		{	if(debug) System.out.println("token NOT");
 			return sym.NOT;
 			}
-"rem"           {	if(debug) System.out.println("token COMENTARIO"); /*No tomo en cuenta los comentarios*/
-			}
 "<>"		{	if(debug) System.out.println("token DIFFERENT");
-			return sym.LESS_THAN_EQ;
+			return sym.DIFFERENT;
 			}
 "<="		{	if(debug) System.out.println("token LESS_THAN_EQ");
 			return sym.LESS_THAN_EQ;
@@ -147,8 +155,8 @@ espacio		= [ \t]+
 "^"             {	if(debug) System.out.println("token CIRCUMFLEX");
 			return sym.CIRCUMFLEX;
 			}
-"%"             {	if(debug) System.out.println("token SLASH");
-			return sym.SLASH;
+"%"             {	if(debug) System.out.println("token MODULE");
+			return sym.MODULE;
 			}
 "("             {	if(debug) System.out.println("token LPAREN");
 			return sym.LPAREN;

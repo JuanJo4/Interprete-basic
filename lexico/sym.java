@@ -42,4 +42,8 @@ public class sym {
   public static final int RPOPPER = 40;
   public static final int QMARK = 41;
   public static final int NEW_LINE = 42;
+  public static final int DIFFERENT = 43;
+  public static final int MODULE = 44;
+  public static final int PROCEDURE = 45;
+  public static final int END_PROCEDURE = 46;
 }
