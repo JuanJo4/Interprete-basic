@@ -41,4 +41,5 @@ public class sym {
   public static final int LPOPPER = 39;
   public static final int RPOPPER = 40;
   public static final int QMARK = 41;
+  public static final int NEW_LINE = 42;
 }

@@ -1,1 +1,233 @@
-Interprete del lenguaje de programación BASIC con ciertas limitaciones
+﻿Interprete del lenguaje de programación BASIC( http://es.wikipedia.org/wiki/BASIC ) 
+con ciertas variaciones y limitaciones
+
+--------------------------------------------------------------------
+			Programa básico
+--------------------------------------------------------------------
+
+	'	Mi primer programa en BASIC
+
+	PRINT "Hello World"
+	END
+
+--------------------------------------------------------------------
+			Comentarios
+--------------------------------------------------------------------
+
+	REM 	Esta cadena no la toma en cuenta el interprete
+
+	'	y esta tampoco porque es un comentario
+
+--------------------------------------------------------------------
+			Declaración de variables
+--------------------------------------------------------------------
+
+Manejaremos solo tres tipos de variables
+
+	INTEGER -> Números enteros
+	FLOAT 	-> Números flotantes
+	STRING	-> Cadena de caracteres
+
+y su declaración simple y de arreglos será
+
+	STRING	namevar
+	INTEGER	namearray[tam] 
+
+--------------------------------------------------------------------
+			Entrada y salida de datos
+--------------------------------------------------------------------
+
+	' La instrucción PRINT nos servirá 
+	' para mostrar datos pon pantalla
+	
+	PRINT "Hola mundo"
+	
+	END
+
+Resultado
+
+	Hola mundo
+
+			----
+
+	' Salto de linea incluido por defecto
+	
+	PRINT "Hola"
+	PRINT "mundo"
+
+	END
+
+Resultado
+
+	Hola
+	mundo
+
+			----
+
+
+	' Concatenación de cadenas
+
+	PRINT "Hola"; "mundo"
+	END
+
+Resultado
+	
+	Hola mundo
+
+			----
+
+	' Mostrar valores numéricos
+
+	INTEGER a
+	INTEGER	b
+
+	a = 10
+	b = 34
+
+	PRINT "El valor de a es"; a; " y el valor de b es"; b
+	
+	END
+
+Resultado
+	
+	El valor de a es 10 y el valor de b es 34
+
+			----
+
+	
+' Leer un número entero desde el teclado
+
+	INTEGER num
+
+	PRINT "Introduce un número";
+	INPUT num
+
+	PRINT "Has tecleado el número"; num
+
+	END
+
+Resultado
+
+	
+Introduce un número? 23
+	Has tecleado el número 2
+
+NOTA: Notese el signo de interrogación "?" añadido
+
+			----
+
+	
+' Leer un entero desde el teclado usando solo INPUT
+
+	INTEGER num
+
+	INPUT "Introduce un número: ", num
+	
+	PRINT "Has tecleado el número"; num
+
+	END
+
+Resultado
+
+	Introduce un número: 23
+	Has tecleado el número 2
+
+--------------------------------------------------------------------
+	    Operadores aritméticos, relacionales y lógicos
+--------------------------------------------------------------------
+
+		  Aritméticos
+	 ----------------------------
+	| Operador |   Significado   |
+	 ----------------------------
+	|     +    |     Adición     |
+	|     -    |   Sustracción   |
+	|     *    |  Multiplicación |
+	|     /    |     División    |
+	|     ^    |   Potenciación  |
+	|     %    |Resto de división|
+         ----------------------------
+
+	 	  Relacionales
+	 ----------------------------
+	| Operador |   Significado   |
+	 ----------------------------
+	|    ==    |    Similitud    |
+	|     >    |    Mayor que    |
+	|     <    |    Menor que    |
+	|    <=    |  Menos o igual  |
+	|    >=    |  Mayor o igual  |
+	|    <>    |    Diferente    |
+         ----------------------------
+
+ 		    Lógicos
+	 ----------------------------
+	| Operador |   Significado   |
+	 ----------------------------
+	|    AND   |Conjunción lógica|
+	|    OR    |Disyunción lógica|
+	|    NOT   | Negación lógica |
+         ----------------------------
+
+
+
+--------------------------------------------------------------------
+			Sentencias IF
+--------------------------------------------------------------------	
+
+
+	IF condición THEN
+		lista_de_ordenes_1
+	ELSE
+		lista_de_ordenes_2
+	ENDI
+
+--------------------------------------------------------------------
+			Bucles FOR, DO y WHILE
+--------------------------------------------------------------------
+
+	' Escribimos un saludo 10 veces
+	
+	FOR i = 1 TO 10
+		PRINT "Hola"
+	NEXT i
+
+	PRINT "Se acabaron las repeticiones"
+
+			----
+
+	' Escribimos los numeros pares del 1 al 20
+
+	FOR n = 2 TO 20 STEP 2
+		PRINT n
+	NEXT n
+
+			----
+
+	' Se repetirá mientras la condición
+	' sea verdadera
+
+	
+WHILE condición
+		órdenes
+	ENDWHILE
+
+			----
+
+	' Se repetirá al menos una vez y
+	' mientras se cumpla la condición
+
+	DO
+		órdenes
+	LOOP UNTIL condición
+
+--------------------------------------------------------------------
+			Procedimientos
+--------------------------------------------------------------------	
+
+	' Estos es un procedimiento
+
+	PROCEDURE nameprocedure( parámetros )
+		declaración de variables
+		sentencias
+	END PROCEDURE

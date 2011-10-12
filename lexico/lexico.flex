@@ -171,7 +171,9 @@ espacio		= [ \t]+
 {identificador}	{	if(debug) System.out.println("token ID");
 				return sym.ID;
 			}
-{nuevalinea}	{ lineanum++; }
+{nuevalinea}	{	if(debug) System.out.println("token NEW_LINE");
+				return sym.NEW_LINE; 
+		 	}
 {espacio}	{ /* saltos espacios en blanco*/}
 .               {System.err.println("Caracter Ilegal encontrado en analisis lexico: " + yytext() + "\n");}
 
