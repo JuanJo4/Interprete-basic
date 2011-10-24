@@ -1,0 +1,60 @@
+/*	Símbolos terminales	*/
+
+terminal NEW_LINE;
+terminal INTEGER;
+terminal FLOAT;
+terminal STRING;
+terminal VAR;
+terminal NUM;
+terminal ASSIGN;
+terminal QMARK;
+terminal PRINT;
+terminal INPUT;
+terminal IF;
+terminal THEN;
+terminal ELSE;
+terminal ENDIF;
+terminal DO;
+terminal LOOP_UNTIL;
+terminal WHILE;
+terminal ENDWHILE;
+terminal FOR;
+terminal TO;
+terminal STEP;
+terminal NEXT;
+terminal LPOPPER;
+terminal RPOPPER;
+terminal LPAREN;
+terminal RPAREN;
+terminal PLUS;
+terminal MINUS;
+terminal ASTERISK;
+terminal SLASH;
+terminal CIRCUMFLEX;
+terminal EQUAL;
+terminal MODULE;
+terminal AND;
+terminal OR;
+terminal NOT;
+terminal DIFFERENT;
+terminal LESS_THAN;
+terminal LESS_THAN_EQ;
+terminal GREATER_THAN;
+terminal GREATER_THAN_EQ;
+terminal PROCEDURE;
+terminal END_PROCEDURE;
+terminal error;
+terminal CONCAT;
+terminal END;
+terminal EOF;
+
+
+
+
+
+
+
+
+
+
+
