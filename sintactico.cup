@@ -84,9 +84,10 @@ non terminal factor;
 /* Precedencia de operadores */
 precedence left OR;
 precedence left AND;
-precedence left GREATER_THAN, LESS_THAN, GREATER_THAN_EQ, LESS_THAN_EQ, EQUAL, DIFFERENT;
+precedence left GREATER_THAN, LESS_THAN, GREATER_THAN_EQ, LESS_THAN_EQ, EQUAL, DIFFERENT;//revisar
 precedence left PLUS, MINUS;
-precedence left SLASH, ASTERISK, MODULE;
+precedence left MODULE;
+precedence left SLASH, ASTERISK;
 precedence right CIRCUMFLEX;
 precedence left LPAREN, RPAREN;
 

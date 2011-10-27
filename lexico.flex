@@ -194,6 +194,9 @@ cadena		= \"[^(\"|\n\r)]*\"
 					return new java_cup.runtime.Symbol(sym.COMMA);
 				}
 				
+{identificador}	{	System.out.println("token ID");
+					return new java_cup.runtime.Symbol(sym.ID);
+				}
 {num_entero}	{	System.out.println("token NUM_ENTERO");
 					return new java_cup.runtime.Symbol(sym.NUM_ENTERO);
 				}
@@ -206,9 +209,6 @@ cadena		= \"[^(\"|\n\r)]*\"
 					return new java_cup.runtime.Symbol(sym.CADENA);
 				}
 				
-{identificador}	{	System.out.println("token ID");
-					return new java_cup.runtime.Symbol(sym.ID);
-				}
 {nuevalinea}	{	System.out.println("token NEW_LINE");
 					numlinea++;
 					return new java_cup.runtime.Symbol(sym.NEW_LINE); 
