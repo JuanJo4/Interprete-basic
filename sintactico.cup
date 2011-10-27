@@ -1,60 +1,124 @@
-/*	Símbolos terminales	*/
+import java_cup.runtime.*;
+import java.io.*;
 
-terminal NEW_LINE;
-terminal INTEGER;
-terminal FLOAT;
-terminal STRING;
-terminal VAR;
-terminal NUM;
-terminal ASSIGN;
-terminal QMARK;
-terminal PRINT;
+parser code{:
+
+  public static void main(String args[]) throws Exception{
+    parser sintactico;
+	
+	if(args.length>0){
+		sintactico = new parser(new Scanner(new FileInputStream(args[0])));
+		sintactico.parse();
+	}else{
+		System.out.println("No se encontró el código fuente (Parámetro incorrecto)");
+	}
+    
+  }
+
+:}
+
+
+/*	Simbolos terminales	*/
+terminal ASTERISK;
 terminal INPUT;
-terminal IF;
-terminal THEN;
+terminal SLASH;
+terminal LESS_THAN;
 terminal ELSE;
-terminal ENDIF;
-terminal DO;
+terminal PLUS;
+terminal RPAREN;
+terminal THEN;
+terminal CONCAT;
+terminal END;
+terminal IF;
+terminal LPAREN;
+terminal PRINT;
+terminal ID;
+terminal NUM_ENTERO;
+//terminal EOF;
+terminal MINUS;
+//terminal error;
 terminal LOOP_UNTIL;
+terminal ASSIGN;
+terminal EQUAL;
+terminal ENDIF;
 terminal WHILE;
 terminal ENDWHILE;
+terminal DO;
 terminal FOR;
 terminal TO;
 terminal STEP;
 terminal NEXT;
-terminal LPOPPER;
-terminal RPOPPER;
-terminal LPAREN;
-terminal RPAREN;
-terminal PLUS;
-terminal MINUS;
-terminal ASTERISK;
-terminal SLASH;
-terminal CIRCUMFLEX;
-terminal EQUAL;
-terminal MODULE;
+terminal INTEGER;
+terminal FLOAT;
+terminal STRING;
 terminal AND;
 terminal OR;
 terminal NOT;
-terminal DIFFERENT;
-terminal LESS_THAN;
 terminal LESS_THAN_EQ;
 terminal GREATER_THAN;
 terminal GREATER_THAN_EQ;
+terminal CIRCUMFLEX;
+terminal LPOPPER;
+terminal RPOPPER;
+terminal NEW_LINE;
+terminal DIFFERENT;
+terminal MODULE;
 terminal PROCEDURE;
-terminal END_PROCEDURE;
-terminal error;
-terminal CONCAT;
-terminal END;
-terminal EOF;
+terminal ENDPROCEDURE;
+terminal COMMA;
+terminal NUM_FLOTANTE;
+terminal CADENA;
+
+/*	Simbolos no terminales	*/
+
+non terminal programa;
+non terminal secuencia_sent;
+non terminal sentencia;
+non terminal expresion_simple;
+non terminal op_suma;
+non terminal term;
+non terminal op_mult;
+non terminal factor;
 
 
+/* Precedencia de operadores */
+precedence left OR;
+precedence left AND;
+precedence left GREATER_THAN, LESS_THAN, GREATER_THAN_EQ, LESS_THAN_EQ, EQUAL, DIFFERENT;
+precedence left PLUS, MINUS;
+precedence left SLASH, ASTERISK, MODULE;
+precedence right CIRCUMFLEX;
+precedence left LPAREN, RPAREN;
 
 
+/* REGLAS GRAMATICALES */
 
+programa			::= secuencia_sent NEW_LINE END
+						| secuencia_sent NEW_LINE END NEW_LINE
+						| NEW_LINE secuencia_sent NEW_LINE END
+						| NEW_LINE secuencia_sent NEW_LINE END NEW_LINE
+						| NEW_LINE END
+						| NEW_LINE END NEW_LINE
+						| END
+						| END NEW_LINE
+						| NEW_LINE;
+						
+secuencia_sent		::= secuencia_sent NEW_LINE sentencia
+					| sentencia;
+					
+sentencia			::= expresion_simple;					
 
+expresion_simple	::= expresion_simple op_suma term
+						| term;
+						
+op_suma				::=	PLUS | MINUS;
 
+term				::= term op_mult factor
+						| factor;
+						
+op_mult				::=	ASTERISK | SLASH | MODULE | CIRCUMFLEX;
 
-
-
-
+factor				::= LPAREN expresion_simple RPAREN
+						| NUM_ENTERO
+						| NUM_FLOTANTE
+						| ID;
