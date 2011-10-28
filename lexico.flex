@@ -6,7 +6,7 @@ import java.io.*;
 %cup
 %class Scanner
 %{
-	private int numlinea = 0;	
+	private int numlinea = 1;	
 %}
 %eofval{
     return new java_cup.runtime.Symbol(sym.EOF);
@@ -20,11 +20,10 @@ identificador	= {letra}({letra}|{digito})+
 nuevalinea	= ( \n | \n\r | \r\n )+
 espacio		= [ \t]+
 cadena		= \"[^(\"|\n\r)]*\"
+comentario	= "rem" | "REM" | "'"
 
 %%
 
-"rem" |
-"'"				{	System.out.println("token COMENTARIO"); /*No tomo en cuenta los comentarios*/ }
 "procedure" |
 "PROCEDURE"		{ 	System.out.println("token PROCEDURE");
 					return new java_cup.runtime.Symbol(sym.PROCEDURE);
@@ -214,5 +213,8 @@ cadena		= \"[^(\"|\n\r)]*\"
 					return new java_cup.runtime.Symbol(sym.NEW_LINE); 
 				}
 {espacio}		{ /* No tomo en cuenta espacios en blanco*/	}
+
+{comentario} {espacio}+ [^\n\r]* {nuevalinea}
+{	System.out.println("token COMENTARIO");	}
 
 .               {	System.err.println("Error léxico en la línea " + numlinea);	}

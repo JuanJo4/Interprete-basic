@@ -78,6 +78,8 @@ non terminal sent_declaracion;
 non terminal tipo_dato;
 non terminal list_var;
 non terminal sent_asignacion;
+non terminal sent_escribir;
+non terminal list_impresion;
 
 non terminal expresion_simple;
 non terminal op_suma;
@@ -113,17 +115,26 @@ secuencia_sent		::= secuencia_sent NEW_LINE sentencia
 					| sentencia;
 					
 sentencia			::= sent_declaracion
-						| sent_asignacion;
+						| sent_asignacion
+						| sent_escribir;
 
 sent_declaracion	::=	tipo_dato list_var;
-
-sent_asignacion		::= ID ASSIGN expresion_simple
-						| ID ASSIGN CADENA;
 
 tipo_dato			::= INTEGER | FLOAT | STRING;
 
 list_var			::=	list_var COMMA ID
 						| ID;
+						
+sent_asignacion		::= ID ASSIGN expresion_simple
+						| ID ASSIGN CADENA;
+						
+sent_escribir		::= PRINT list_impresion;
+
+list_impresion		::= list_impresion CONCAT CADENA
+						| list_impresion CONCAT expresion_simple
+						| CADENA
+						| expresion_simple;
+						
 
 /*	De aqui en adelante la sintaxis funciona correctamente*/
 
