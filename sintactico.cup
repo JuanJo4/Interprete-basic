@@ -74,6 +74,11 @@ terminal CADENA;
 non terminal programa;
 non terminal secuencia_sent;
 non terminal sentencia;
+non terminal sent_declaracion;
+non terminal tipo_dato;
+non terminal list_var;
+non terminal sent_asignacion;
+
 non terminal expresion_simple;
 non terminal op_suma;
 non terminal term;
@@ -107,7 +112,20 @@ programa			::= secuencia_sent NEW_LINE END
 secuencia_sent		::= secuencia_sent NEW_LINE sentencia
 					| sentencia;
 					
-sentencia			::= expresion_simple;					
+sentencia			::= sent_declaracion
+						| sent_asignacion;
+
+sent_declaracion	::=	tipo_dato list_var;
+
+sent_asignacion		::= ID ASSIGN expresion_simple
+						| ID ASSIGN CADENA;
+
+tipo_dato			::= INTEGER | FLOAT | STRING;
+
+list_var			::=	list_var COMMA ID
+						| ID;
+
+/*	De aqui en adelante la sintaxis funciona correctamente*/
 
 expresion_simple	::= expresion_simple op_suma term
 						| term;
