@@ -18,7 +18,9 @@ parser code{:
 :}
 
 
-/*	Simbolos terminales	*/
+/*	Simbolos
+	terminales	*/
+	
 terminal ASTERISK;
 terminal INPUT;
 terminal SLASH;
@@ -69,7 +71,8 @@ terminal COMMA;
 terminal NUM_FLOTANTE;
 terminal CADENA;
 
-/*	Simbolos no terminales	*/
+/*	Simbolos
+	no terminales	*/
 
 non terminal programa;
 non terminal secuencia_sent;
@@ -82,7 +85,10 @@ non terminal sent_escribir;
 non terminal list_impresion;
 non terminal sent_leer;
 non terminal sent_if;
-
+non terminal sent_for;
+non terminal sent_do;
+non terminal sent_while;
+non terminal sent_proc;
 non terminal expresion_compuesta;
 non terminal op_logico;
 non terminal expresion_comparacion;
@@ -94,7 +100,9 @@ non terminal op_mult;
 non terminal factor;
 
 
-/* Precedencia de operadores */
+/* Precedencia
+	de operadores */
+
 precedence left OR;
 precedence left AND;
 precedence left NOT;
@@ -105,7 +113,8 @@ precedence right CIRCUMFLEX;
 precedence left LPAREN, RPAREN;
 
 
-/* REGLAS GRAMATICALES */
+/*	REGLAS 
+	GRAMATICALES */
 
 programa				::= secuencia_sent NEW_LINE END
 							| secuencia_sent NEW_LINE END NEW_LINE
@@ -124,7 +133,11 @@ sentencia				::= sent_declaracion
 							| sent_asignacion
 							| sent_escribir
 							| sent_leer
-							| sent_if;
+							| sent_if
+							| sent_for
+							| sent_do
+							| sent_while
+							| sent_proc;
 
 sent_declaracion		::=	tipo_dato list_var;
 
@@ -143,11 +156,22 @@ list_impresion			::= list_impresion CONCAT expresion_simple
 sent_leer				::=	INPUT ID
 							| INPUT CADENA COMMA ID;
 						
-sent_if					::=	IF expresion_compuesta THEN NEW_LINE secuencia_sent NEW_LINE ENDIF
-							| IF expresion_compuesta THEN NEW_LINE secuencia_sent NEW_LINE 
-								ELSE NEW_LINE secuencia_sent NEW_LINE ENDIF;
+sent_if					::=	IF expresion_compuesta THEN NEW_LINE 
+								secuencia_sent NEW_LINE
+								ENDIF
+							| IF expresion_compuesta THEN NEW_LINE 
+								secuencia_sent NEW_LINE 
+								ELSE NEW_LINE
+								secuencia_sent NEW_LINE
+								ENDIF;
 
-						
+sent_for				::= FOR ID ASSIGN expresion_simple TO expresion_simple NEW_LINE
+								secuencia_sent NEW_LINE
+								NEXT
+							| FOR ID ASSIGN expresion_simple TO expresion_simple STEP expresion_simple NEW_LINE
+								secuencia_sent NEW_LINE
+								NEXT;
+							
 						
 						
 

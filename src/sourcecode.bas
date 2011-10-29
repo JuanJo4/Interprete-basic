@@ -16,7 +16,7 @@ REM	Salida de datos
 PRINT "Hello World!"
 PRINT "Hello" ; " World!" 
 PRINT "My name is " ; name
-PRINT num1 ; " years old"
+PRINT "I have " ; num1 ; " years old"
 PRINT 4+2/5 ; " is expresion"
 
 '	Entrada de datos
@@ -27,18 +27,29 @@ INPUT "Ingrese el precio: ", num3
 
 '	Pruebas con IF
 
-IF 46 == 123 AND 23<=234 OR NOT name <> "Kuadanm" THEN
+IF num2 == 123 AND 23<=234 OR NOT name <> "Kuadanm" THEN
 PRINT "Etoy dentro del if"
 var = 123.3
 ENDIF
 
-IF 2+2 == 4 THEN
-PRINT "Sabes sumar"
+IF 2+2^3 == 10 THEN
+PRINT "Muy bien"
 var = 123.3
 ELSE
-PRINT "No sabes sumar"
+PRINT "Oh no!"
 var = 123.3
 ENDIF
+
+' Pruebas con sentencia FOR
+
+FOR num2 = 1 TO 10
+PRINT num2
+NEXT
+
+FOR num2 = num2+5 TO 10 STEP 2
+PRINT "You are in a LOOP"
+NEXT
+
 
 
 END
