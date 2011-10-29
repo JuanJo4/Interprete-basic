@@ -14,9 +14,9 @@ import java.io.*;
 
 digito		= [0-9]
 num_entero	= {digito}+
-num_flotante	= {digito}+ \. {digito}*
+num_flotante	= {digito}+ \. {digito}+
 letra		= [a-zA-Z]
-identificador	= {letra}({letra}|{digito})+
+identificador	= {letra}({letra}|{digito})*
 nuevalinea	= ( \n | \n\r | \r\n )+
 espacio		= [ \t]+
 cadena		= \"[^(\"|\n\r)]*\"

@@ -167,12 +167,19 @@ sent_if					::=	IF expresion_compuesta THEN NEW_LINE
 
 sent_for				::= FOR ID ASSIGN expresion_simple TO expresion_simple NEW_LINE
 								secuencia_sent NEW_LINE
-								NEXT
+								NEXT ID
 							| FOR ID ASSIGN expresion_simple TO expresion_simple STEP expresion_simple NEW_LINE
 								secuencia_sent NEW_LINE
-								NEXT;
-							
-						
+								NEXT ID;
+								
+sent_do					::= DO NEW_LINE
+								secuencia_sent NEW_LINE
+								LOOP_UNTIL expresion_compuesta;
+								
+sent_while				::= WHILE expresion_compuesta NEW_LINE
+								secuencia_sent NEW_LINE
+								ENDWHILE;
+								
 						
 
 expresion_compuesta		::=	expresion_compuesta op_logico expresion_comparacion

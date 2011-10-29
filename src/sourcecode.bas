@@ -44,11 +44,26 @@ ENDIF
 
 FOR num2 = 1 TO 10
 PRINT num2
-NEXT
+NEXT num2
 
 FOR num2 = num2+5 TO 10 STEP 2
 PRINT "You are in a LOOP"
-NEXT
+NEXT num2
+
+'	Pruebas con sentencias DO y WHILE
+
+INTEGER i
+i = 0
+
+DO
+PRINT "Numero " ; i
+i = i + 1
+LOOP UNTIL i < 7 AND NOT 4 <> 4
+
+WHILE clave <> "xjk5"
+PRINT "ESCRIBE TU CLAVE DE ACCESO"
+INPUT clave
+ENDWHILE
 
 
 
