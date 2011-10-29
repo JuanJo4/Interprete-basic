@@ -80,7 +80,13 @@ non terminal list_var;
 non terminal sent_asignacion;
 non terminal sent_escribir;
 non terminal list_impresion;
+non terminal sent_leer;
+non terminal sent_if;
 
+non terminal expresion_compuesta;
+non terminal op_logico;
+non terminal expresion_comparacion;
+non terminal op_comparacion;
 non terminal expresion_simple;
 non terminal op_suma;
 non terminal term;
@@ -91,52 +97,71 @@ non terminal factor;
 /* Precedencia de operadores */
 precedence left OR;
 precedence left AND;
+precedence left NOT;
 precedence left GREATER_THAN, LESS_THAN, GREATER_THAN_EQ, LESS_THAN_EQ, EQUAL, DIFFERENT;//revisar
 precedence left PLUS, MINUS;
-precedence left MODULE;
-precedence left SLASH, ASTERISK;
+precedence left SLASH, ASTERISK, MODULE;
 precedence right CIRCUMFLEX;
 precedence left LPAREN, RPAREN;
 
 
 /* REGLAS GRAMATICALES */
 
-programa			::= secuencia_sent NEW_LINE END
-						| secuencia_sent NEW_LINE END NEW_LINE
-						| NEW_LINE secuencia_sent NEW_LINE END
-						| NEW_LINE secuencia_sent NEW_LINE END NEW_LINE
-						| NEW_LINE END
-						| NEW_LINE END NEW_LINE
-						| END
-						| END NEW_LINE
-						| NEW_LINE;
+programa				::= secuencia_sent NEW_LINE END
+							| secuencia_sent NEW_LINE END NEW_LINE
+							| NEW_LINE secuencia_sent NEW_LINE END
+							| NEW_LINE secuencia_sent NEW_LINE END NEW_LINE
+							| NEW_LINE END
+							| NEW_LINE END NEW_LINE
+							| END
+							| END NEW_LINE
+							| NEW_LINE;
 						
-secuencia_sent		::= secuencia_sent NEW_LINE sentencia
-					| sentencia;
+secuencia_sent			::= secuencia_sent NEW_LINE sentencia
+							| sentencia;
 					
-sentencia			::= sent_declaracion
-						| sent_asignacion
-						| sent_escribir;
+sentencia				::= sent_declaracion
+							| sent_asignacion
+							| sent_escribir
+							| sent_leer
+							| sent_if;
 
-sent_declaracion	::=	tipo_dato list_var;
+sent_declaracion		::=	tipo_dato list_var;
 
-tipo_dato			::= INTEGER | FLOAT | STRING;
+tipo_dato				::= INTEGER | FLOAT | STRING;
 
-list_var			::=	list_var COMMA ID
-						| ID;
+list_var				::=	list_var COMMA ID
+							| ID;
 						
-sent_asignacion		::= ID ASSIGN expresion_simple
-						| ID ASSIGN CADENA;
+sent_asignacion			::= ID ASSIGN expresion_simple;
 						
-sent_escribir		::= PRINT list_impresion;
+sent_escribir			::= PRINT list_impresion;
 
-list_impresion		::= list_impresion CONCAT CADENA
-						| list_impresion CONCAT expresion_simple
-						| CADENA
-						| expresion_simple;
+list_impresion			::= list_impresion CONCAT expresion_simple							
+							| expresion_simple;
+						
+sent_leer				::=	INPUT ID
+							| INPUT CADENA COMMA ID;
+						
+sent_if					::=	IF expresion_compuesta THEN NEW_LINE secuencia_sent NEW_LINE ENDIF
+							| IF expresion_compuesta THEN NEW_LINE secuencia_sent NEW_LINE 
+								ELSE NEW_LINE secuencia_sent NEW_LINE ENDIF;
+
+						
+						
 						
 
-/*	De aqui en adelante la sintaxis funciona correctamente*/
+expresion_compuesta		::=	expresion_compuesta op_logico expresion_comparacion
+						| expresion_comparacion;
+						
+op_logico				::=	AND | OR;
+
+expresion_comparacion	::=	NOT expresion_simple op_comparacion expresion_simple
+							| expresion_simple op_comparacion expresion_simple;
+							
+op_comparacion			::=	EQUAL | DIFFERENT
+							| LESS_THAN | LESS_THAN_EQ
+							| GREATER_THAN | GREATER_THAN_EQ;
 
 expresion_simple	::= expresion_simple op_suma term
 						| term;
@@ -151,4 +176,5 @@ op_mult				::=	ASTERISK | SLASH | MODULE | CIRCUMFLEX;
 factor				::= LPAREN expresion_simple RPAREN
 						| NUM_ENTERO
 						| NUM_FLOTANTE
-						| ID;
+						| ID
+						| CADENA;
