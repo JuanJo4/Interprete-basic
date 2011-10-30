@@ -36,9 +36,7 @@ terminal LPAREN;
 terminal PRINT;
 terminal ID;
 terminal NUM_ENTERO;
-//terminal EOF;
 terminal MINUS;
-//terminal error;
 terminal LOOP_UNTIL;
 terminal ASSIGN;
 terminal EQUAL;
@@ -156,7 +154,9 @@ sent_declaracion		::=	tipo_dato list_var;
 tipo_dato				::= INTEGER | FLOAT | STRING;
 
 list_var				::=	list_var COMMA ID
-							| ID;
+							| list_var COMMA ID LPOPPER NUM_ENTERO RPOPPER
+							| ID LPOPPER NUM_ENTERO RPOPPER
+							| ID;							
 						
 sent_asignacion			::= ID ASSIGN expresion_simple;
 						
