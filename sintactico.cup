@@ -75,6 +75,7 @@ terminal CADENA;
 	no terminales	*/
 
 non terminal programa;
+non terminal sub_programa;
 non terminal secuencia_sent;
 non terminal sentencia;
 non terminal sent_declaracion;
@@ -88,7 +89,9 @@ non terminal sent_if;
 non terminal sent_for;
 non terminal sent_do;
 non terminal sent_while;
-non terminal sent_proc;
+non terminal def_proc;
+non terminal call_proc;
+non terminal list_param;
 non terminal expresion_compuesta;
 non terminal op_logico;
 non terminal expresion_comparacion;
@@ -116,16 +119,25 @@ precedence left LPAREN, RPAREN;
 /*	REGLAS 
 	GRAMATICALES */
 
-programa				::= secuencia_sent NEW_LINE END
+programa				::= secuencia_sent NEW_LINE END							
 							| secuencia_sent NEW_LINE END NEW_LINE
-							| NEW_LINE secuencia_sent NEW_LINE END
+							| NEW_LINE secuencia_sent NEW_LINE END							
 							| NEW_LINE secuencia_sent NEW_LINE END NEW_LINE
-							| NEW_LINE END
-							| NEW_LINE END NEW_LINE
+							| secuencia_sent NEW_LINE END NEW_LINE sub_programa
+							| secuencia_sent NEW_LINE END NEW_LINE sub_programa NEW_LINE
+							| NEW_LINE secuencia_sent NEW_LINE END NEW_LINE sub_programa
+							| NEW_LINE secuencia_sent NEW_LINE END NEW_LINE sub_programa NEW_LINE
 							| END
 							| END NEW_LINE
-							| NEW_LINE;
-						
+							| NEW_LINE END NEW_LINE							
+							| END NEW_LINE sub_programa
+							| END NEW_LINE sub_programa NEW_LINE
+							| NEW_LINE END NEW_LINE sub_programa
+							| NEW_LINE END NEW_LINE sub_programa NEW_LINE;
+							
+sub_programa			::= sub_programa NEW_LINE def_proc
+							| def_proc;
+							
 secuencia_sent			::= secuencia_sent NEW_LINE sentencia
 							| sentencia;
 					
@@ -136,8 +148,8 @@ sentencia				::= sent_declaracion
 							| sent_if
 							| sent_for
 							| sent_do
-							| sent_while
-							| sent_proc;
+							| sent_while							
+							| call_proc;
 
 sent_declaracion		::=	tipo_dato list_var;
 
@@ -180,7 +192,18 @@ sent_while				::= WHILE expresion_compuesta NEW_LINE
 								secuencia_sent NEW_LINE
 								ENDWHILE;
 								
+def_proc				::=	PROCEDURE ID LPAREN RPAREN NEW_LINE
+								secuencia_sent NEW_LINE
+								ENDPROCEDURE
+							| PROCEDURE ID LPAREN list_param RPAREN NEW_LINE
+								secuencia_sent NEW_LINE
+								ENDPROCEDURE;
+	
+list_param				::= list_param COMMA tipo_dato ID
+							| tipo_dato ID;	
 						
+call_proc				::= ID LPAREN list_var RPAREN
+							| ID LPAREN RPAREN;						
 
 expresion_compuesta		::=	expresion_compuesta op_logico expresion_comparacion
 						| expresion_comparacion;
