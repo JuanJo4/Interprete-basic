@@ -10,8 +10,9 @@ public class Declaracion extends Nodo{
 
 	public enum TIPODATO {INTEGER,FLOAT, STRING}
 	
-	public Declaracion(TIPO name,int tipodato,Nodo listvar) {
-		super(name);
+	public Declaracion(TIPODATO tipodato,Nodo listvar) {
+		super(TIPO.sent_declaracion);
+		this.add(listvar);
 		// TODO Auto-generated constructor stub
 	}
 

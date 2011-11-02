@@ -5,6 +5,7 @@ import arbol.Nodo.TIPO;
 import arbol.Declaracion.TIPODATO;
 import lexico.Scanner;
 import java.io.FileInputStream;
+import java_cup.runtime.*;
 
 parser code{:
 	
@@ -43,8 +44,8 @@ terminal END;
 terminal IF;
 terminal LPAREN;
 terminal PRINT;
-terminal ID;
-terminal NUM_ENTERO;
+terminal String ID;
+terminal Integer NUM_ENTERO;
 terminal MINUS;
 terminal LOOP_UNTIL;
 terminal ASSIGN;
@@ -129,7 +130,8 @@ precedence right CIRCUMFLEX;
 
 programa				::= secuencia_sent:secuencia NEW_LINE END									
 								{:
-									arbol.add(secuencia); 
+									arbol.add(secuencia);
+									arbol.printTree();
 								:}
 							| secuencia_sent:secuencia NEW_LINE END NEW_LINE
 								{:
@@ -237,7 +239,7 @@ sentencia				::= sent_declaracion:declaracion
 
 sent_declaracion		::=	tipo_dato:tipodato list_var:listvar
 							{:
-								RESULT = new Declaracion(TIPO.sent_declaracion,tipodato,listvar);
+								RESULT = new Declaracion(tipodato,listvar);
 							:}
 							;
 
@@ -245,10 +247,30 @@ tipo_dato				::= INTEGER {:	RESULT = TIPODATO.INTEGER; :}
 							| FLOAT {:	RESULT = TIPODATO.FLOAT; :}
 							| STRING {:	RESULT = TIPODATO.STRING; :};
 
-list_var				::=	list_var COMMA ID
-							| list_var COMMA ID LPOPPER NUM_ENTERO RPOPPER
-							| ID LPOPPER NUM_ENTERO RPOPPER
-							| ID;							
+list_var				::=	list_var:listvar COMMA ID:ID
+								{:
+									Nodo tmp = new Nodo(TIPO.list_var);									
+									tmp.add(listvar);
+									tmp.add(new Identificador(ID,-1,-1,null));
+									
+									RESULT = tmp;
+								:}
+							| list_var:listvar COMMA ID:ID LPOPPER NUM_ENTERO:tam RPOPPER
+								{:
+									Nodo tmp = new Nodo(TIPO.list_var);									
+									tmp.add(listvar);
+									tmp.add(new Identificador(ID,tam,-1,null));
+									
+									RESULT = tmp;
+								:}
+							| ID:ID LPOPPER NUM_ENTERO:tam RPOPPER
+								{:								
+									RESULT = new Identificador(ID,tam,-1,null);
+								:}
+							| ID:ID
+								{:								
+									RESULT = new Identificador(ID,-1,-1,null);
+								:};							
 						
 sent_asignacion			::= ID ASSIGN expresion_simple
 							| ID LPOPPER NUM_ENTERO RPOPPER ASSIGN expresion_simple;

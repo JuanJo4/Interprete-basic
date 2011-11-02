@@ -133,13 +133,13 @@ comentario	= "rem" | "REM" | "'"
 				
 ","             {	return new java_cup.runtime.Symbol(sym.COMMA); }
 				
-{identificador}	{	return new java_cup.runtime.Symbol(sym.ID); }
+{identificador}	{	return new java_cup.runtime.Symbol(sym.ID, yytext()); }
 
-{num_entero}	{	return new java_cup.runtime.Symbol(sym.NUM_ENTERO); }
+{num_entero}	{	return new java_cup.runtime.Symbol(sym.NUM_ENTERO,new Integer(yytext())); }
 				
-{num_flotante}	{	return new java_cup.runtime.Symbol(sym.NUM_FLOTANTE); }
+{num_flotante}	{	return new java_cup.runtime.Symbol(sym.NUM_FLOTANTE,new Float(yytext())); }
 				
-{cadena}        {	return new java_cup.runtime.Symbol(sym.CADENA); }
+{cadena}        {	return new java_cup.runtime.Symbol(sym.CADENA,yytext()); }
 				
 {nuevalinea}	{	numlinea++;
 					return new java_cup.runtime.Symbol(sym.NEW_LINE); 

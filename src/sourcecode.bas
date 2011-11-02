@@ -3,8 +3,8 @@
 INTEGER x
 INTEGER y,z
 
-z = x + y
+' z = x + y
 
-PRINT z
+' PRINT z
 
 END

@@ -10,13 +10,24 @@ public class Nodo extends DefaultMutableTreeNode {
 	
 	public enum TIPO { programa, sub_programa, secuencia_sent, sentencia, sent_declaracion, tipo_dato, list_var, sent_asignacion,
 		sent_escribir, list_impresion, sent_leer, sent_if, sent_for, sent_do, sent_while, def_proc, call_proc, list_param,
-		expresion_compuesta, op_logico, expresion_comparacion, op_comparacion, expresion_simple, op_suma, term, op_mult }
+		expresion_compuesta, op_logico, expresion_comparacion, op_comparacion, expresion_simple, op_suma, term, op_mult,
+		ID}
 	
-	TIPO name;	
+	TIPO tiponodo;	
 	
-	public Nodo(TIPO name) {
+	public Nodo(TIPO tiponodo) {
 		// TODO Auto-generated constructor stub
-		this.name = name;
+		this.tiponodo = tiponodo;
+	}
+	
+	public TIPO getTipo(){ return tiponodo; }
+	
+	public void printTree(){
+		System.out.println("Nodo " + tiponodo + " (" + this.getChildCount() + ")");
+		
+		for(int i=0;i<this.getChildCount();i++){
+			((Nodo) this.getChildAt(i)).printTree();			
+		}
 	}
 	
 

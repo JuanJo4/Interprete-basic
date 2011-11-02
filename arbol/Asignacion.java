@@ -7,8 +7,8 @@ public class Asignacion extends Nodo {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public Asignacion(TIPO name) {
-		super(name);
+	public Asignacion() {
+		super(TIPO.sent_asignacion);
 		// TODO Auto-generated constructor stub
 	}
 
