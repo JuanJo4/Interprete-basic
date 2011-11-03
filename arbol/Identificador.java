@@ -1,6 +1,6 @@
 package arbol;
 
-public class Identificador extends Nodo{
+public class Identificador extends Nodo {
 
 	/**
 	 * 
@@ -11,24 +11,51 @@ public class Identificador extends Nodo{
 	int tam;
 	int pos;
 	Object valor;
-	
-	public Identificador(String namevar,int tam,int pos,Object valor) {
+
+	public Identificador(String namevar, int tam, int pos, Object valor) {
 		super(TIPO.ID);
 		this.namevar = namevar;
 		this.tam = tam;
 		this.pos = pos;
 		this.valor = valor;
+		
 		// TODO Auto-generated constructor stub
 	}
-	
-	public void setNamevar(String namevar){ this.namevar = namevar; }
-	public void setTam(int tam){ this.tam = tam; }
-	public void setPos(int pos){ this.pos = pos; }
-	public void setValor(Object valor){ this.valor = valor; }
 
-	public String getNamevar(){	return namevar; }
-	public int getTam(){ return tam; }
-	public int getPos(){ return pos; }
-	public Object getValor(){ return valor; }
+	public void setNamevar(String namevar) {
+		this.namevar = namevar;
+	}
+
+	public void setTam(int tam) {
+		this.tam = tam;
+	}
+
+	public void setPos(int pos) {
+		this.pos = pos;
+	}
+
+	public void setValor(Object valor) {
+		this.valor = valor;
+	}
+
+	public boolean isVector(){	return tam>0; }
 	
+	public String getNamevar() {
+		return namevar;
+	}
+
+	public int getTam() {
+		return tam;
+	}
+
+	public int getPos() {
+		return pos;
+	}
+
+	public Object getValor() {
+		return valor;
+	}
+	
+	public Object getTipodato(){ return valor.getClass(); }
+
 }

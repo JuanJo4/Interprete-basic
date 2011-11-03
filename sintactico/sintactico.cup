@@ -2,7 +2,8 @@ package sintactico;
 
 import arbol.*;
 import arbol.Nodo.TIPO;
-import arbol.Declaracion.TIPODATO;
+import arbol.Variable.DATO;
+import arbol.Operacion.OP;
 import lexico.Scanner;
 import java.io.FileInputStream;
 import java_cup.runtime.*;
@@ -59,7 +60,7 @@ terminal TO;
 terminal STEP;
 terminal NEXT;
 terminal INTEGER;
-terminal FLOAT;
+terminal Float FLOAT;
 terminal STRING;
 terminal AND;
 terminal OR;
@@ -77,7 +78,7 @@ terminal PROCEDURE;
 terminal ENDPROCEDURE;
 terminal COMMA;
 terminal NUM_FLOTANTE;
-terminal CADENA;
+terminal String CADENA;
 
 /*	Simbolos
 	no terminales	*/
@@ -87,7 +88,7 @@ non terminal Nodo sub_programa;
 non terminal Nodo secuencia_sent;
 non terminal Nodo sentencia;
 non terminal Nodo sent_declaracion;
-non terminal TIPODATO tipo_dato;
+non terminal DATO tipo_dato;
 non terminal Nodo list_var;
 non terminal Nodo sent_asignacion;
 non terminal Nodo sent_escribir;
@@ -105,9 +106,9 @@ non terminal Nodo op_logico;
 non terminal Nodo expresion_comparacion;
 non terminal Nodo op_comparacion;
 non terminal Nodo expresion_simple;
-non terminal Nodo op_suma;
+non terminal OP op_suma;
 non terminal Nodo term;
-non terminal Nodo op_mult;
+non terminal OP op_mult;
 non terminal Nodo factor;
 
 
@@ -184,7 +185,9 @@ sub_programa			::= sub_programa:sub NEW_LINE def_proc:proc
 								:}
 							| def_proc:proc
 								{:
-									RESULT = proc;
+									Nodo tmp = new Nodo(TIPO.sub_programa);
+									tmp.add(proc);
+									RESULT = tmp;
 								:};
 							
 secuencia_sent			::= secuencia_sent:secuencia NEW_LINE sentencia:sent
@@ -197,7 +200,9 @@ secuencia_sent			::= secuencia_sent:secuencia NEW_LINE sentencia:sent
 								:}
 							| sentencia:sent
 								{:
-									RESULT = sent;
+									Nodo tmp = new Nodo(TIPO.secuencia_sent);									
+									tmp.add(sent);
+									RESULT = tmp;
 								:};
 					
 sentencia				::= sent_declaracion:declaracion
@@ -237,48 +242,68 @@ sentencia				::= sent_declaracion:declaracion
 									RESULT = callproc;
 								:};
 
-sent_declaracion		::=	tipo_dato:tipodato list_var:listvar
+sent_declaracion		::=	tipo_dato:dato list_var:listvar
 							{:
-								RESULT = new Declaracion(tipodato,listvar);
+								RESULT = new Declaracion(dato,listvar);
 							:}
 							;
 
-tipo_dato				::= INTEGER {:	RESULT = TIPODATO.INTEGER; :}
-							| FLOAT {:	RESULT = TIPODATO.FLOAT; :}
-							| STRING {:	RESULT = TIPODATO.STRING; :};
+tipo_dato				::= INTEGER {:	RESULT = DATO.INTEGER; :}
+							| FLOAT {:	RESULT = DATO.FLOAT; :}
+							| STRING {:	RESULT = DATO.STRING; :};
 
-list_var				::=	list_var:listvar COMMA ID:ID
+list_var				::=	list_var:listvar COMMA ID:id
 								{:
 									Nodo tmp = new Nodo(TIPO.list_var);									
 									tmp.add(listvar);
-									tmp.add(new Identificador(ID,-1,-1,null));
+									tmp.add(new Identificador(id,-1,-1,null));
 									
 									RESULT = tmp;
 								:}
-							| list_var:listvar COMMA ID:ID LPOPPER NUM_ENTERO:tam RPOPPER
+							| list_var:listvar COMMA ID:id LPOPPER NUM_ENTERO:tam RPOPPER
 								{:
 									Nodo tmp = new Nodo(TIPO.list_var);									
 									tmp.add(listvar);
-									tmp.add(new Identificador(ID,tam,-1,null));
+									tmp.add(new Identificador(id,tam,-1,null));
 									
 									RESULT = tmp;
 								:}
-							| ID:ID LPOPPER NUM_ENTERO:tam RPOPPER
+							| ID:id LPOPPER NUM_ENTERO:tam RPOPPER
 								{:								
-									RESULT = new Identificador(ID,tam,-1,null);
+									RESULT = new Identificador(id,tam,-1,null);
 								:}
-							| ID:ID
+							| ID:id
 								{:								
-									RESULT = new Identificador(ID,-1,-1,null);
+									RESULT = new Identificador(id,-1,-1,null);
 								:};							
 						
-sent_asignacion			::= ID ASSIGN expresion_simple
-							| ID LPOPPER NUM_ENTERO RPOPPER ASSIGN expresion_simple;
+sent_asignacion			::= ID:id ASSIGN list_impresion:list
+								{:
+									RESULT = new Asignacion(new Identificador(id,-1,-1,null),list);
+								:}
+							| ID:id LPOPPER NUM_ENTERO:pos RPOPPER ASSIGN list_impresion:list
+								{:
+									RESULT = new Asignacion(new Identificador(id,-1,pos,null),list);
+								:}
+							;
 						
-sent_escribir			::= PRINT list_impresion;
+sent_escribir			::= PRINT list_impresion:list
+								{:
+									RESULT = new Escribir(list);
+								:};
 
-list_impresion			::= list_impresion CONCAT expresion_simple							
-							| expresion_simple;
+list_impresion			::= list_impresion:list CONCAT expresion_simple:exp	
+								{:
+									Nodo tmp = new Nodo(TIPO.list_impresion);
+									tmp.add(list);
+									tmp.add(exp);
+									
+									RESULT = tmp;
+								:}
+							| expresion_simple:exp
+								{:
+									RESULT = exp;
+								:};
 						
 sent_leer				::=	INPUT ID
 							| INPUT CADENA COMMA ID;
@@ -332,18 +357,57 @@ op_comparacion			::=	EQUAL | DIFFERENT
 							| LESS_THAN | LESS_THAN_EQ
 							| GREATER_THAN | GREATER_THAN_EQ;
 
-expresion_simple	::= expresion_simple op_suma term 
-						| term;
+expresion_simple	::= expresion_simple:exp op_suma:operando term:term 
+							{:
+								Operacion tmp = new Operacion(operando);
+								tmp.add(exp);
+								tmp.add(term);
+								
+								RESULT = tmp;
+							:}
+						| term:term
+							{:
+								RESULT = term;
+							:};
 						
-op_suma				::=	PLUS | MINUS;
+op_suma				::=	PLUS {: RESULT = OP.SUMA; :}
+						| MINUS {: RESULT = OP.RESTA; :};
 
-term				::= term op_mult factor
-						| factor;
+term				::= term:term op_mult:operando factor:fac
+							{:
+								Operacion tmp = new Operacion(operando);
+								tmp.add(term);
+								tmp.add(fac);
+								
+								RESULT = tmp;
+							:}							
+						| factor:factor
+							{:
+								RESULT = factor;
+							:};
 						
-op_mult				::=	ASTERISK | SLASH | MODULE | CIRCUMFLEX;
+op_mult				::=	ASTERISK {: RESULT = OP.MULTIPLICACION; :}
+						| SLASH {:	RESULT = OP.DIVISION; :}
+						| MODULE {:	RESULT = OP.MODULO; :}
+						| CIRCUMFLEX {:	RESULT = OP.POTENCIA; :};
 
-factor				::= LPAREN expresion_simple RPAREN
-						| NUM_ENTERO
-						| NUM_FLOTANTE
-						| ID
-						| CADENA;
+factor				::= LPAREN expresion_simple:exp RPAREN
+							{:
+								RESULT = new Constante(exp);
+							:}
+						| NUM_ENTERO:num
+							{:
+								RESULT = new Constante(num);
+							:}
+						| NUM_FLOTANTE:num
+							{:
+								RESULT = new Constante(num);
+							:}
+						| ID:id
+							{:
+								RESULT = new Identificador(id,-1,-1,null);
+							:}
+						| CADENA:cad
+							{:
+								RESULT = new Constante(cad);
+							:};

@@ -3,8 +3,10 @@
 INTEGER x
 INTEGER y,z
 
-' z = x + y
+x = 2+2
+y = 4*2 - 4/2
+z = x + y
 
-' PRINT z
+PRINT z
 
 END
