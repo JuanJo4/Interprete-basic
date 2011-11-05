@@ -1,12 +1,10 @@
 ' Suma de dos numeros
 
-INTEGER x
-INTEGER y,z
+INTEGER var1,var2[10],var3,var4[10]
+STRING cad1,cad2
 
-x = 2+2
-y = 4*2 - 4/2
-z = x + y
+x = 2*2*22*4^3
 
-PRINT z
+' PRINT x
 
 END

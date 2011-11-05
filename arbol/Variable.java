@@ -6,9 +6,10 @@ public class Variable {
 	
 	DATO tipodato;
 	String namevar;
-	Object valor;
+	Object valor_simple;
+	
+	Object[] valor_vector;
 	int tam;
-	int pos;
 	
 	/*	Si es variable simple	*/
 	public Variable(DATO tipodato,String namevar) {
@@ -23,22 +24,22 @@ public class Variable {
 		this.tipodato = tipodato;
 		this.namevar = namevar;
 		this.tam = tam;
+		valor_vector = new Object[tam];
 		// TODO Auto-generated constructor stub
 	}
 	
-	public void setValor(Object valor){
-		this.valor = valor;
+	public void setValor(Object valor_simple){
+		this.valor_simple = valor_simple;
 	}
 	
-	public void setValor(Object valor,int pos){
+	public void setValor(Object valor_vector,int pos){
 		if(pos<tam){
-			this.valor = valor;
-			this.pos = pos;
+			this.valor_vector[pos] = valor_vector;			
 		}
 	}
 	
 	public boolean isVector(){	return tam>0; }
 	public String getNamevar(){	return namevar; }
-	public Object getValor(){	return valor; }
-	public int getPos(){	return pos;	}
+	public Object getValor(){	return valor_simple; }
+	public Object getValor(int pos){	return valor_vector[pos]; }
 }

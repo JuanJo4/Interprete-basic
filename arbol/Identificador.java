@@ -9,53 +9,25 @@ public class Identificador extends Nodo {
 
 	String namevar;
 	int tam;
-	int pos;
-	Object valor;
 
-	public Identificador(String namevar, int tam, int pos, Object valor) {
-		super(TIPO.ID);
+	public Identificador(String namevar) {
+		super(TIPO.IDENTIFICADOR);
 		this.namevar = namevar;
-		this.tam = tam;
-		this.pos = pos;
-		this.valor = valor;
-		
+		this.tam = -1;
 		// TODO Auto-generated constructor stub
 	}
-
-	public void setNamevar(String namevar) {
+	
+	public Identificador(String namevar, int tam) {
+		super(TIPO.IDENTIFICADOR);
 		this.namevar = namevar;
-	}
-
-	public void setTam(int tam) {
-		this.tam = tam;
-	}
-
-	public void setPos(int pos) {
-		this.pos = pos;
-	}
-
-	public void setValor(Object valor) {
-		this.valor = valor;
+		this.tam = tam;	
+		// TODO Auto-generated constructor stub
 	}
 
 	public boolean isVector(){	return tam>0; }
 	
-	public String getNamevar() {
-		return namevar;
-	}
+	public String getNamevar() { return namevar; }
 
-	public int getTam() {
-		return tam;
-	}
-
-	public int getPos() {
-		return pos;
-	}
-
-	public Object getValor() {
-		return valor;
-	}
-	
-	public Object getTipodato(){ return valor.getClass(); }
+	public int getTam() { return tam; }
 
 }

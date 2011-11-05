@@ -6,11 +6,10 @@ import java.util.List;
 
 public class Symbols {
 	List<Variable> listSymbols;
-	Iterator it;
+	Iterator<Variable> it;
 	
 	public Symbols() {
 		listSymbols = new ArrayList<Variable>();
-		it = listSymbols.iterator();
 		// TODO Auto-generated constructor stub
 	}
 	
@@ -19,12 +18,40 @@ public class Symbols {
 	}
 	
 	public void setValor(String namevar,Object valor){
+		it = listSymbols.iterator();
 		while(it.hasNext()){			
 			if(((Variable) it.next()).getNamevar().equals(namevar)){
 				((Variable) it.next()).setValor(valor);
 			}
 		}	
 	}
-	/*public Object getValorAt(String namevar){
-	}*/
+	
+	public void setValor(String namevar,Object valor,int pos){
+		it = listSymbols.iterator();
+		while(it.hasNext()){			
+			if(((Variable) it.next()).getNamevar().equals(namevar)){
+				((Variable) it.next()).setValor(valor,pos);
+			}
+		}	
+	}
+	
+	public Object getValorAt(String namevar){
+		it = listSymbols.iterator();
+		while(it.hasNext()){			
+			if(((Variable) it.next()).getNamevar().equals(namevar)){
+				return ((Variable) it.next()).getValor();
+			}
+		}
+		return null;
+	}
+	
+	public Object getValorAt(String namevar,int pos){
+		it = listSymbols.iterator();
+		while(it.hasNext()){			
+			if(((Variable) it.next()).getNamevar().equals(namevar)){
+				return ((Variable) it.next()).getValor(pos);
+			}
+		}
+		return null;
+	}
 }

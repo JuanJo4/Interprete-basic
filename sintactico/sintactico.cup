@@ -26,6 +26,7 @@ parser code{:
 
 action code{:
 	private Nodo arbol = new Nodo(TIPO.programa);
+	private Symbols tabla_simbolos = new Symbols();
 :}
 
 
@@ -244,6 +245,40 @@ sentencia				::= sent_declaracion:declaracion
 
 sent_declaracion		::=	tipo_dato:dato list_var:listvar
 							{:
+								/*-----------------------------------------------------------------------*/
+								/*	Ingresando variables a la tabla de simbolos							*/
+								/*-----------------------------------------------------------------------*/
+								String namevar;/*	Nombre de la variable	*/
+								int tam;/*	Tamaño del vector, -1 por defecto	*/
+								
+								/*	Si solo se declaro una variable listvar es un nodo IDENTIFICADOR	*/
+								if(listvar.getTipo()==TIPO.IDENTIFICADOR){
+									namevar = ((Identificador)listvar).getNamevar();
+									tam = ((Identificador)listvar).getTam();
+									/*	Si se declara un vector	*/
+									if(((Identificador)listvar).isVector())
+										tabla_simbolos.add(new Variable(dato,namevar,tam));
+									else
+										tabla_simbolos.add(new Variable(dato,namevar));										
+								}else{
+									/*	Si se declara mas de una variable en la linea se
+										crea un nodo listvar	*/
+									/*	Busco los nodos hojas (IDENTIFICADOR) a partir 
+										del nodo listvar*/
+									Identificador tmp = (Identificador)listvar.getFirstLeaf();									
+									for(int i=0;i<listvar.getLeafCount();i++){
+										namevar = tmp.getNamevar();
+										tam = tmp.getTam();
+										/*	Si se declara un vector	*/
+										if(tmp.isVector())
+											tabla_simbolos.add(new Variable(dato,namevar,tam));
+										else
+											tabla_simbolos.add(new Variable(dato,namevar));
+											
+										tmp = (Identificador)tmp.getNextLeaf();
+									}
+								}									
+								/*-----------------------------------------------------------------------*/
 								RESULT = new Declaracion(dato,listvar);
 							:}
 							;
@@ -256,34 +291,41 @@ list_var				::=	list_var:listvar COMMA ID:id
 								{:
 									Nodo tmp = new Nodo(TIPO.list_var);									
 									tmp.add(listvar);
-									tmp.add(new Identificador(id,-1,-1,null));
+									tmp.add(new Identificador(id));
 									
 									RESULT = tmp;
 								:}
 							| list_var:listvar COMMA ID:id LPOPPER NUM_ENTERO:tam RPOPPER
 								{:
 									Nodo tmp = new Nodo(TIPO.list_var);									
-									tmp.add(listvar);
-									tmp.add(new Identificador(id,tam,-1,null));
 									
-									RESULT = tmp;
+									if(tam==0){									
+										System.out.println("Error! - Vector declarado con tamaño 0");
+									}else{
+										tmp.add(listvar);
+										tmp.add(new Identificador(id,tam));								
+										RESULT = tmp;
+									}
 								:}
 							| ID:id LPOPPER NUM_ENTERO:tam RPOPPER
 								{:								
-									RESULT = new Identificador(id,tam,-1,null);
+									if(tam==0)
+										System.out.println("Error! - Vector declarado con tamaño 0");
+									else
+										RESULT = new Identificador(id,tam);
 								:}
 							| ID:id
-								{:								
-									RESULT = new Identificador(id,-1,-1,null);
+								{:										
+									RESULT = new Identificador(id);
 								:};							
 						
-sent_asignacion			::= ID:id ASSIGN list_impresion:list
+sent_asignacion			::= ID:id ASSIGN expresion_simple:list
 								{:
-									RESULT = new Asignacion(new Identificador(id,-1,-1,null),list);
+									RESULT = new Asignacion(id,list);
 								:}
-							| ID:id LPOPPER NUM_ENTERO:pos RPOPPER ASSIGN list_impresion:list
+							| ID:id LPOPPER NUM_ENTERO:pos RPOPPER ASSIGN expresion_simple:list
 								{:
-									RESULT = new Asignacion(new Identificador(id,-1,pos,null),list);
+									RESULT = new Asignacion(id,pos,list);
 								:}
 							;
 						
@@ -303,10 +345,13 @@ list_impresion			::= list_impresion:list CONCAT expresion_simple:exp
 							| expresion_simple:exp
 								{:
 									RESULT = exp;
-								:};
+								:}
+							;
 						
 sent_leer				::=	INPUT ID
-							| INPUT CADENA COMMA ID;
+							| INPUT ID LPOPPER NUM_ENTERO RPOPPER
+							| INPUT CADENA COMMA ID
+							| INPUT CADENA COMMA ID LPOPPER NUM_ENTERO RPOPPER;
 						
 sent_if					::=	IF expresion_compuesta THEN NEW_LINE 
 								secuencia_sent NEW_LINE
@@ -360,10 +405,16 @@ op_comparacion			::=	EQUAL | DIFFERENT
 expresion_simple	::= expresion_simple:exp op_suma:operando term:term 
 							{:
 								Operacion tmp = new Operacion(operando);
-								tmp.add(exp);
-								tmp.add(term);
 								
-								RESULT = tmp;
+								if(((Constante)term).getTipodato()!=String.class){
+									tmp.add(exp);
+									tmp.add(term);
+									tmp.calcular();
+									RESULT = tmp;
+								}else{
+									System.out.println("Error! - No se pueden realizar operaciones aritméticas con cadenas");
+								}				
+								
 							:}
 						| term:term
 							{:
@@ -376,10 +427,16 @@ op_suma				::=	PLUS {: RESULT = OP.SUMA; :}
 term				::= term:term op_mult:operando factor:fac
 							{:
 								Operacion tmp = new Operacion(operando);
-								tmp.add(term);
-								tmp.add(fac);
 								
-								RESULT = tmp;
+								if(((Constante)fac).getTipodato()!=String.class){
+									tmp.add(term);
+									tmp.add(fac);
+									tmp.calcular();
+									RESULT = tmp;
+								}else{
+									System.out.println("Error! - No se pueden realizar operaciones aritméticas con cadenas");
+								}				
+								
 							:}							
 						| factor:factor
 							{:
@@ -393,7 +450,7 @@ op_mult				::=	ASTERISK {: RESULT = OP.MULTIPLICACION; :}
 
 factor				::= LPAREN expresion_simple:exp RPAREN
 							{:
-								RESULT = new Constante(exp);
+								RESULT = exp;
 							:}
 						| NUM_ENTERO:num
 							{:
@@ -404,8 +461,12 @@ factor				::= LPAREN expresion_simple:exp RPAREN
 								RESULT = new Constante(num);
 							:}
 						| ID:id
-							{:
-								RESULT = new Identificador(id,-1,-1,null);
+							{:								
+								RESULT = new Constante(tabla_simbolos.getValorAt(id));
+							:}
+						| ID:id LPOPPER NUM_ENTERO:pos RPOPPER
+							{:								
+								RESULT = new Constante(tabla_simbolos.getValorAt(id,pos));
 							:}
 						| CADENA:cad
 							{:
