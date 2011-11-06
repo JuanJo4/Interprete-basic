@@ -25,8 +25,6 @@ public class Nodo extends DefaultMutableTreeNode {
 	public TIPO getTipo() {
 		return tiponodo;
 	}
-
-	public Object getValor(){ return -1; }
 	
 	public void printTree() {
 		System.out.println("Nodo " + tiponodo + " (" + this.getChildCount()	+ ")");

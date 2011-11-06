@@ -1,10 +1,15 @@
 ' Suma de dos numeros
 
-INTEGER var1,var2[10],var3,var4[10]
-STRING cad1,cad2
+INTEGER edad,edad2
+STRING nombre
 
-x = 2*2*22*4^3
+nombre = "Juan Jose"
+edad = 10
+edad2 = 10
+edad = edad + edad2
 
-' PRINT x
+PRINT "Mi nombre es " ; nombre ; " y tengo " ; edad ; " anos de edad"
+PRINT "hola"
+PRINT "hola mundo"
 
 END

@@ -28,18 +28,44 @@ public class Variable {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public void setValor(Object valor_simple){
-		this.valor_simple = valor_simple;
+	public boolean setValor(Object valor_simple){		
+		if(tipodato==DATO.INTEGER && valor_simple.getClass()== Integer.class
+			|| tipodato==DATO.INTEGER && valor_simple.getClass()== Float.class
+			|| tipodato==DATO.FLOAT && valor_simple.getClass()== Float.class
+			|| tipodato==DATO.STRING && valor_simple.getClass()== String.class){
+			this.valor_simple = valor_simple;
+			return true;
+		}else
+			return false;
 	}
 	
-	public void setValor(Object valor_vector,int pos){
+	public boolean setValor(Object valor_vector,int pos){
 		if(pos<tam){
-			this.valor_vector[pos] = valor_vector;			
+			if(tipodato==DATO.INTEGER && valor_vector.getClass()== Integer.class
+					|| tipodato==DATO.INTEGER && valor_vector.getClass()== Float.class
+					|| tipodato==DATO.FLOAT && valor_vector.getClass()== Float.class
+					|| tipodato==DATO.STRING && valor_vector.getClass()== String.class){
+					this.valor_vector[pos] = valor_vector;
+					return true;
+				}else
+					return false;					
 		}
+		return false;
 	}
 	
 	public boolean isVector(){	return tam>0; }
+	public DATO getTipodato(){	return tipodato; }
 	public String getNamevar(){	return namevar; }
-	public Object getValor(){	return valor_simple; }
-	public Object getValor(int pos){	return valor_vector[pos]; }
+	public Object getValor(){	
+		if(valor_simple==null)
+			System.out.println("Error! - Variable con valor nulo");
+		
+		return valor_simple;
+	}
+	public Object getValor(int pos){	
+		if(valor_vector[pos]==null)
+			System.out.println("Error! - Variable con valor nulo");
+		
+		return valor_vector[pos];
+	}
 }

@@ -17,4 +17,19 @@ public class Constante extends Nodo {
 
 	public Object getValor(){ return valor; }
 	public Object getTipodato(){ return valor.getClass(); }
+	public void imprimir(){	
+		/*	Si es una cadena	*/
+		if(getValor().getClass()==String.class){
+			String cad = (String) getValor();
+			cad = cad.replace(' ','-');
+			cad = cad.replace('"',' ');
+			cad = cad.trim();
+			cad = cad.replace('-',' ');
+			
+			System.out.print(cad);
+		}else{
+				System.out.print(getValor());
+		}
+		
+	}
 }

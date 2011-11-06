@@ -321,16 +321,27 @@ list_var				::=	list_var:listvar COMMA ID:id
 						
 sent_asignacion			::= ID:id ASSIGN expresion_simple:list
 								{:
-									RESULT = new Asignacion(id,list);
+									Asignacion tmp = new Asignacion(id,list);
+									
+									if(tabla_simbolos.setValor(id,tmp.getValor()))						
+										RESULT = tmp;
+									else
+										System.out.println("Error! - Variable no declarada / Tipos de datos incorrecto");
 								:}
 							| ID:id LPOPPER NUM_ENTERO:pos RPOPPER ASSIGN expresion_simple:list
 								{:
-									RESULT = new Asignacion(id,pos,list);
+									Asignacion tmp = new Asignacion(id,list,pos);
+									
+									if(tabla_simbolos.setValor(id,tmp.getValor(),pos))						
+										RESULT = tmp;
+									else
+										System.out.println("Error! - Variable no declarada / Tipos de datos incorrecto");								
 								:}
 							;
 						
 sent_escribir			::= PRINT list_impresion:list
 								{:
+									System.out.println();
 									RESULT = new Escribir(list);
 								:};
 
@@ -340,10 +351,19 @@ list_impresion			::= list_impresion:list CONCAT expresion_simple:exp
 									tmp.add(list);
 									tmp.add(exp);
 									
+									if(exp.getTipo()==TIPO.CONSTANTE)
+										((Constante)exp).imprimir();									
+									else
+										((Operacion)exp).imprimir();	
+									
 									RESULT = tmp;
 								:}
 							| expresion_simple:exp
 								{:
+									if(exp.getTipo()==TIPO.CONSTANTE)
+										((Constante)exp).imprimir();									
+									else
+										((Operacion)exp).imprimir();																		
 									RESULT = exp;
 								:}
 							;
@@ -402,19 +422,21 @@ op_comparacion			::=	EQUAL | DIFFERENT
 							| LESS_THAN | LESS_THAN_EQ
 							| GREATER_THAN | GREATER_THAN_EQ;
 
+/*-----------------------------------------------------------------------------------------------------------------------------*/
 expresion_simple	::= expresion_simple:exp op_suma:operando term:term 
 							{:
 								Operacion tmp = new Operacion(operando);
 								
-								if(((Constante)term).getTipodato()!=String.class){
-									tmp.add(exp);
-									tmp.add(term);
-									tmp.calcular();
-									RESULT = tmp;
-								}else{
-									System.out.println("Error! - No se pueden realizar operaciones aritméticas con cadenas");
-								}				
-								
+								if(exp.getTipo()==TIPO.CONSTANTE && ((Constante)exp).getTipodato()==String.class
+									|| term.getTipo()==TIPO.CONSTANTE && ((Constante)term).getTipodato()==String.class)									
+										System.out.println("Error! - No se pueden realizar operaciones aritméticas con cadenas");
+									else{
+										tmp.add(exp);
+										tmp.add(term);
+										tmp.calcular();
+										
+										RESULT = tmp;
+									}															
 							:}
 						| term:term
 							{:
@@ -428,14 +450,16 @@ term				::= term:term op_mult:operando factor:fac
 							{:
 								Operacion tmp = new Operacion(operando);
 								
-								if(((Constante)fac).getTipodato()!=String.class){
-									tmp.add(term);
-									tmp.add(fac);
-									tmp.calcular();
-									RESULT = tmp;
-								}else{
-									System.out.println("Error! - No se pueden realizar operaciones aritméticas con cadenas");
-								}				
+								if(term.getTipo()==TIPO.CONSTANTE && ((Constante)term).getTipodato()==String.class
+									|| fac.getTipo()==TIPO.CONSTANTE && ((Constante)fac).getTipodato()==String.class)									
+										System.out.println("Error! - No se pueden realizar operaciones aritméticas con cadenas");
+									else{
+										tmp.add(term);
+										tmp.add(fac);
+										tmp.calcular();
+										
+										RESULT = tmp;
+									}					
 								
 							:}							
 						| factor:factor

@@ -9,7 +9,6 @@ public class Asignacion extends Nodo {
 
 	String namevar;
 	int pos;
-	Object valor;
 	
 	public Asignacion(String namevar,Nodo hijo) {
 		super(TIPO.sent_asignacion);
@@ -19,7 +18,7 @@ public class Asignacion extends Nodo {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public Asignacion(String namevar,int pos,Nodo hijo) {
+	public Asignacion(String namevar,Nodo hijo,int pos) {
 		super(TIPO.sent_asignacion);
 		this.add(hijo);
 		this.namevar = namevar;
@@ -30,7 +29,11 @@ public class Asignacion extends Nodo {
 	public boolean isVector(){ return pos>=0; }
 	
 	public Object getValor(){
-		return ((Nodo)this.getFirstChild()).getValor();
+		if(((Nodo) this.getChildAt(0)).getTipo()==TIPO.CONSTANTE)
+			return ((Constante) this.getChildAt(0)).getValor();
+		else
+			return ((Operacion) this.getChildAt(0)).getValor();
+		
 	}
 
 }

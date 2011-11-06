@@ -15,43 +15,56 @@ public class Symbols {
 	
 	public void add(Variable var){
 		listSymbols.add(var);
+		
 	}
 	
-	public void setValor(String namevar,Object valor){
+	public boolean setValor(String namevar,Object valor){
 		it = listSymbols.iterator();
-		while(it.hasNext()){			
-			if(((Variable) it.next()).getNamevar().equals(namevar)){
-				((Variable) it.next()).setValor(valor);
+		
+		while(it.hasNext()){
+			Variable tmp = it.next();
+			if(tmp.getNamevar().equals(namevar)){
+				return tmp.setValor(valor);				
 			}
-		}	
-	}
+		}		
+		return false;
+	}	
 	
-	public void setValor(String namevar,Object valor,int pos){
+	public boolean setValor(String namevar,Object valor,int pos){
 		it = listSymbols.iterator();
-		while(it.hasNext()){			
-			if(((Variable) it.next()).getNamevar().equals(namevar)){
-				((Variable) it.next()).setValor(valor,pos);
+		
+		while(it.hasNext()){
+			Variable tmp = it.next();
+			if(tmp.getNamevar().equals(namevar)){
+				return tmp.setValor(valor,pos);				
 			}
-		}	
+		}		
+		return false;
 	}
 	
 	public Object getValorAt(String namevar){
 		it = listSymbols.iterator();
-		while(it.hasNext()){			
-			if(((Variable) it.next()).getNamevar().equals(namevar)){
-				return ((Variable) it.next()).getValor();
+		
+		while(it.hasNext()){
+			Variable tmp = it.next();			
+			if(tmp.getNamevar().equals(namevar)){
+				return tmp.getValor();
 			}
 		}
+		System.out.println("Error! - Variable con valor nulo");
 		return null;
 	}
 	
 	public Object getValorAt(String namevar,int pos){
 		it = listSymbols.iterator();
-		while(it.hasNext()){			
-			if(((Variable) it.next()).getNamevar().equals(namevar)){
-				return ((Variable) it.next()).getValor(pos);
+		
+		while(it.hasNext()){
+			Variable tmp = it.next();
+			if(tmp.getNamevar().equals(namevar)){				
+				return tmp.getValor(pos);
 			}
 		}
+		System.out.println("Error! - Variable con valor nulo");
 		return null;
 	}
 }

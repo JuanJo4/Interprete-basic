@@ -20,82 +20,45 @@ public class Operacion extends Nodo{
 	
 	public void calcular(){
 		float f1,f2;
+		
+		if(((Nodo) this.getFirstChild()).getTipo()==TIPO.CONSTANTE)
+			f1 = Float.parseFloat(((Constante) this.getFirstChild()).getValor().toString());
+		else				
+			f1 = Float.parseFloat(((Operacion) this.getFirstChild()).getValor().toString());
+		
+		if(((Nodo) this.getLastChild()).getTipo()==TIPO.CONSTANTE)				
+			f2 = Float.parseFloat(((Constante) this.getLastChild()).getValor().toString());
+		else
+			f2 = Float.parseFloat(((Operacion) this.getLastChild()).getValor().toString());
+		
 		switch(operando){
-			case SUMA:
-				if(((Nodo) this.getFirstChild()).getTipo()==TIPO.CONSTANTE){
-					f1 = Float.parseFloat(((Constante) this.getFirstChild()).getValor().toString());
-					f2 = Float.parseFloat(((Constante) this.getLastChild()).getValor().toString());
-					valor = f1 + f2;
-				}
-				else{
-					f1 = Float.parseFloat(((Operacion) this.getFirstChild()).getValor().toString());
-					f2 = Float.parseFloat(((Constante) this.getLastChild()).getValor().toString());
-					valor = f1 + f2;
-				}
+			case SUMA:			
+				valor = f1 + f2;								
 			break;
+			
 			case RESTA:
-				if(((Nodo) this.getFirstChild()).getTipo()==TIPO.CONSTANTE){
-					f1 = Float.parseFloat(((Constante) this.getFirstChild()).getValor().toString());
-					f2 = Float.parseFloat(((Constante) this.getLastChild()).getValor().toString());
-					valor = f1 - f2;
-				}
-				else{
-					f1 = Float.parseFloat(((Operacion) this.getFirstChild()).getValor().toString());
-					f2 = Float.parseFloat(((Constante) this.getLastChild()).getValor().toString());
-					valor = f1 - f2;
-				}
+				valor = f1 - f2;
 			break;
+			
 			case MULTIPLICACION:
-				if(((Nodo) this.getFirstChild()).getTipo()==TIPO.CONSTANTE){
-					f1 = Float.parseFloat(((Constante) this.getFirstChild()).getValor().toString());
-					f2 = Float.parseFloat(((Constante) this.getLastChild()).getValor().toString());
-					valor = f1 * f2;
-				}
-				else{
-					f1 = Float.parseFloat(((Operacion) this.getFirstChild()).getValor().toString());
-					f2 = Float.parseFloat(((Constante) this.getLastChild()).getValor().toString());
-					valor = f1 * f2;
-				}
+				valor = f1 * f2;
 			break;
+			
 			case DIVISION:
-				if(((Nodo) this.getFirstChild()).getTipo()==TIPO.CONSTANTE){
-					f1 = Float.parseFloat(((Constante) this.getFirstChild()).getValor().toString());
-					f2 = Float.parseFloat(((Constante) this.getLastChild()).getValor().toString());
-					valor = f1 / f2;
-				}
-				else{
-					f1 = Float.parseFloat(((Operacion) this.getFirstChild()).getValor().toString());
-					f2 = Float.parseFloat(((Constante) this.getLastChild()).getValor().toString());
-					valor = f1 / f2;
-				}
+				valor = f1 / f2;
 			break;
+			
 			case MODULO:
-				if(((Nodo) this.getFirstChild()).getTipo()==TIPO.CONSTANTE){
-					f1 = Float.parseFloat(((Constante) this.getFirstChild()).getValor().toString());
-					f2 = Float.parseFloat(((Constante) this.getLastChild()).getValor().toString());
-					valor = f1 % f2;
-				}
-				else{
-					f1 = Float.parseFloat(((Operacion) this.getFirstChild()).getValor().toString());
-					f2 = Float.parseFloat(((Constante) this.getLastChild()).getValor().toString());
-					valor = f1 % f2;
-				}
+				valor = f1 % f2;
 			break;
+			
 			case POTENCIA:
-				if(((Nodo) this.getFirstChild()).getTipo()==TIPO.CONSTANTE){
-					f1 = Float.parseFloat(((Constante) this.getFirstChild()).getValor().toString());
-					f2 = Float.parseFloat(((Constante) this.getLastChild()).getValor().toString());
-					valor = (float) Math.pow(f1,f2);
-				}
-				else{
-					f1 = Float.parseFloat(((Operacion) this.getFirstChild()).getValor().toString());
-					f2 = Float.parseFloat(((Constante) this.getLastChild()).getValor().toString());
-					valor = (float) Math.pow(f1,f2);
-				}
-			break;
+				valor = (float) Math.pow(f1,f2);
+			break;			
 		}
 	}
 	
 	public Object getValor(){ return valor; }
-
+	
+	public void imprimir(){	System.out.print(getValor()) ; }
 }
