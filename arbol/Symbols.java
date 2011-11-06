@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import arbol.Variable.DATO;
+
 public class Symbols {
 	List<Variable> listSymbols;
 	Iterator<Variable> it;
@@ -65,6 +67,19 @@ public class Symbols {
 			}
 		}
 		System.out.println("Error! - Variable con valor nulo");
+		return null;
+	}
+	
+	public DATO getTipodatoAt(String namevar){
+		it = listSymbols.iterator();
+		
+		while(it.hasNext()){
+			Variable tmp = it.next();
+			if(tmp.getNamevar().equals(namevar)){				
+				return tmp.getTipodato();
+			}
+		}
+		System.out.println("Error! - Variable no declarada");
 		return null;
 	}
 }

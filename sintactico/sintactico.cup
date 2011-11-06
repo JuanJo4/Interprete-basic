@@ -5,8 +5,10 @@ import arbol.Nodo.TIPO;
 import arbol.Variable.DATO;
 import arbol.Operacion.OP;
 import lexico.Scanner;
-import java.io.FileInputStream;
 import java_cup.runtime.*;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
 
 parser code{:
 	
@@ -25,10 +27,12 @@ parser code{:
 :}
 
 action code{:
-	private Nodo arbol = new Nodo(TIPO.programa);
+	private Nodo arbol = new Nodo(TIPO._PROGRAMA_);
+	
 	private Symbols tabla_simbolos = new Symbols();
+	private InputStreamReader entrada = new InputStreamReader(System.in);
+    private BufferedReader buf = new BufferedReader (entrada);
 :}
-
 
 /*	Simbolos
 	terminales	*/
@@ -132,8 +136,8 @@ precedence right CIRCUMFLEX;
 
 programa				::= secuencia_sent:secuencia NEW_LINE END									
 								{:
-									arbol.add(secuencia);
-									arbol.printTree();
+									arbol.add(secuencia);									
+									arbol.printTree();									
 								:}
 							| secuencia_sent:secuencia NEW_LINE END NEW_LINE
 								{:
@@ -341,8 +345,11 @@ sent_asignacion			::= ID:id ASSIGN expresion_simple:list
 						
 sent_escribir			::= PRINT list_impresion:list
 								{:
+									Nodo tmp = new Nodo(TIPO.sent_escribir);
+									tmp.add(list);
+									
 									System.out.println();
-									RESULT = new Escribir(list);
+									RESULT = tmp;
 								:};
 
 list_impresion			::= list_impresion:list CONCAT expresion_simple:exp	
@@ -368,10 +375,94 @@ list_impresion			::= list_impresion:list CONCAT expresion_simple:exp
 								:}
 							;
 						
-sent_leer				::=	INPUT ID
-							| INPUT ID LPOPPER NUM_ENTERO RPOPPER
-							| INPUT CADENA COMMA ID
-							| INPUT CADENA COMMA ID LPOPPER NUM_ENTERO RPOPPER;
+sent_leer				::=	INPUT ID:id
+								{:
+									Nodo tmp = new Nodo(TIPO.sent_leer);
+									tmp.add(new Identificador(id));
+									
+									String lectura = buf.readLine();
+									Object val;
+									
+									if(tabla_simbolos.getTipodatoAt(id)==DATO.STRING)
+										val = lectura;
+									else{
+										if(tabla_simbolos.getTipodatoAt(id)==DATO.INTEGER)
+											val = Integer.parseInt(lectura);
+										else
+											val = Float.parseFloat(lectura);
+									}
+									if(tabla_simbolos.setValor(id,val))
+										RESULT = tmp;
+									else
+										System.out.println("Error! - Variable no declarada / Tipos de datos incorrecto");									
+								:}							
+							| INPUT ID:id LPOPPER NUM_ENTERO:pos RPOPPER
+								{:
+									Nodo tmp = new Nodo(TIPO.sent_leer);
+									tmp.add(new Identificador(id,pos+1));
+									
+									String lectura = buf.readLine();
+									Object val;
+									
+									if(tabla_simbolos.getTipodatoAt(id)==DATO.STRING)
+										val = lectura;
+									else{
+										if(tabla_simbolos.getTipodatoAt(id)==DATO.INTEGER)
+											val = Integer.parseInt(lectura);
+										else
+											val = Float.parseFloat(lectura);
+									}
+									if(tabla_simbolos.setValor(id,val,pos))
+										RESULT = tmp;
+									else
+										System.out.println("Error! - Variable no declarada / Tipos de datos incorrecto");	
+								:}
+							| INPUT CADENA:cad COMMA ID:id
+								{:
+									Nodo tmp = new Nodo(TIPO.sent_leer);
+									tmp.add(new Constante(cad + "? "));
+									tmp.add(new Identificador(id));
+									
+									((Constante)tmp.getFirstChild()).imprimir();
+									String lectura = buf.readLine();
+									Object val;
+									
+									if(tabla_simbolos.getTipodatoAt(id)==DATO.STRING)
+										val = lectura;
+									else{
+										if(tabla_simbolos.getTipodatoAt(id)==DATO.INTEGER)
+											val = Integer.parseInt(lectura);
+										else
+											val = Float.parseFloat(lectura);
+									}
+									if(tabla_simbolos.setValor(id,val))
+										RESULT = tmp;
+									else
+										System.out.println("Error! - Variable no declarada / Tipos de datos incorrecto");
+								:}
+							| INPUT CADENA:cad COMMA ID:id LPOPPER NUM_ENTERO:pos RPOPPER
+								{:
+									Nodo tmp = new Nodo(TIPO.sent_leer);
+									tmp.add(new Constante(cad + "? "));
+									tmp.add(new Identificador(id,pos+1));
+									
+									((Constante)tmp.getFirstChild()).imprimir();
+									String lectura = buf.readLine();
+									Object val;
+									
+									if(tabla_simbolos.getTipodatoAt(id)==DATO.STRING)
+										val = lectura;
+									else{
+										if(tabla_simbolos.getTipodatoAt(id)==DATO.INTEGER)
+											val = Integer.parseInt(lectura);
+										else
+											val = Float.parseFloat(lectura);
+									}
+									if(tabla_simbolos.setValor(id,val,pos))
+										RESULT = tmp;
+									else
+										System.out.println("Error! - Variable no declarada / Tipos de datos incorrecto");
+								:};
 						
 sent_if					::=	IF expresion_compuesta THEN NEW_LINE 
 								secuencia_sent NEW_LINE
