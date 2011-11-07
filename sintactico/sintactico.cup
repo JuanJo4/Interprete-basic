@@ -4,6 +4,8 @@ import arbol.*;
 import arbol.Nodo.TIPO;
 import arbol.Variable.DATO;
 import arbol.Operacion.OP;
+import arbol.Comparacion.OP_COMPARACION;
+import arbol.Comparacion.OP_LOGICO;
 import lexico.Scanner;
 import java_cup.runtime.*;
 import java.io.BufferedReader;
@@ -88,8 +90,8 @@ terminal String CADENA;
 /*	Simbolos
 	no terminales	*/
 
-non terminal Nodo programa;
-non terminal Nodo sub_programa;
+non terminal Nodo	programa;
+non terminal Nodo	sub_programa;
 non terminal Nodo secuencia_sent;
 non terminal Nodo sentencia;
 non terminal Nodo sent_declaracion;
@@ -107,9 +109,9 @@ non terminal Nodo def_proc;
 non terminal Nodo call_proc;
 non terminal Nodo list_param;
 non terminal Nodo expresion_compuesta;
-non terminal Nodo op_logico;
+non terminal OP_LOGICO op_logico;
 non terminal Nodo expresion_comparacion;
-non terminal Nodo op_comparacion;
+non terminal OP_COMPARACION	op_comparacion;
 non terminal Nodo expresion_simple;
 non terminal OP op_suma;
 non terminal Nodo term;
@@ -179,22 +181,25 @@ programa				::= secuencia_sent:secuencia NEW_LINE END
 							| NEW_LINE END NEW_LINE sub_programa
 							| NEW_LINE END NEW_LINE sub_programa NEW_LINE
 							| error {:	System.out.println("Error sintáctico!"); :};
-							
+/*---------------------------------------------------------------------------------------------------------------------------------*/						
 sub_programa			::= sub_programa:sub NEW_LINE def_proc:proc
 								{:
-									Nodo tmp = new Nodo(TIPO.sub_programa);
+									/*Nodo tmp = new Nodo(TIPO.sub_programa);
 									tmp.add(sub);
 									tmp.add(proc);
 									
 									RESULT = tmp;
+									*/
 								:}
 							| def_proc:proc
 								{:
+								/*
 									Nodo tmp = new Nodo(TIPO.sub_programa);
 									tmp.add(proc);
 									RESULT = tmp;
+									*/
 								:};
-							
+/*---------------------------------------------------------------------------------------------------------------------------------*/							
 secuencia_sent			::= secuencia_sent:secuencia NEW_LINE sentencia:sent
 								{:
 									Nodo tmp = new Nodo(TIPO.secuencia_sent);
@@ -209,7 +214,7 @@ secuencia_sent			::= secuencia_sent:secuencia NEW_LINE sentencia:sent
 									tmp.add(sent);
 									RESULT = tmp;
 								:};
-					
+/*---------------------------------------------------------------------------------------------------------------------------------*/					
 sentencia				::= sent_declaracion:declaracion
 								{:
 									RESULT = declaracion;
@@ -228,25 +233,25 @@ sentencia				::= sent_declaracion:declaracion
 								:}
 							| sent_if:decision
 								{:
-									RESULT = decision;
+									//RESULT = decision;
 								:}
 							| sent_for:buclepara
 								{:
-									RESULT = buclepara;
+									//RESULT = buclepara;
 								:}
 							| sent_do:buclehaga
 								{:
-									RESULT = buclehaga;
+									//RESULT = buclehaga;
 								:}
 							| sent_while:buclemientras
 								{:
-									RESULT = buclemientras;
+									//RESULT = buclemientras;
 								:}
 							| call_proc:callproc
 								{:
-									RESULT = callproc;
+									//RESULT = callproc;
 								:};
-
+/*---------------------------------------------------------------------------------------------------------------------------------*/
 sent_declaracion		::=	tipo_dato:dato list_var:listvar
 							{:
 								/*-----------------------------------------------------------------------*/
@@ -286,11 +291,11 @@ sent_declaracion		::=	tipo_dato:dato list_var:listvar
 								RESULT = new Declaracion(dato,listvar);
 							:}
 							;
-
+/*---------------------------------------------------------------------------------------------------------------------------------*/
 tipo_dato				::= INTEGER {:	RESULT = DATO.INTEGER; :}
 							| FLOAT {:	RESULT = DATO.FLOAT; :}
 							| STRING {:	RESULT = DATO.STRING; :};
-
+/*---------------------------------------------------------------------------------------------------------------------------------*/
 list_var				::=	list_var:listvar COMMA ID:id
 								{:
 									Nodo tmp = new Nodo(TIPO.list_var);									
@@ -322,7 +327,7 @@ list_var				::=	list_var:listvar COMMA ID:id
 								{:										
 									RESULT = new Identificador(id);
 								:};							
-						
+/*---------------------------------------------------------------------------------------------------------------------------------*/						
 sent_asignacion			::= ID:id ASSIGN expresion_simple:list
 								{:
 									Asignacion tmp = new Asignacion(id,list);
@@ -342,7 +347,7 @@ sent_asignacion			::= ID:id ASSIGN expresion_simple:list
 										System.out.println("Error! - Variable no declarada / Tipos de datos incorrecto");								
 								:}
 							;
-						
+/*---------------------------------------------------------------------------------------------------------------------------------*/						
 sent_escribir			::= PRINT list_impresion:list
 								{:
 									Nodo tmp = new Nodo(TIPO.sent_escribir);
@@ -351,7 +356,7 @@ sent_escribir			::= PRINT list_impresion:list
 									System.out.println();
 									RESULT = tmp;
 								:};
-
+/*---------------------------------------------------------------------------------------------------------------------------------*/
 list_impresion			::= list_impresion:list CONCAT expresion_simple:exp	
 								{:
 									Nodo tmp = new Nodo(TIPO.list_impresion);
@@ -374,7 +379,7 @@ list_impresion			::= list_impresion:list CONCAT expresion_simple:exp
 									RESULT = exp;
 								:}
 							;
-						
+/*---------------------------------------------------------------------------------------------------------------------------------*/						
 sent_leer				::=	INPUT ID:id
 								{:
 									Nodo tmp = new Nodo(TIPO.sent_leer);
@@ -463,7 +468,7 @@ sent_leer				::=	INPUT ID:id
 									else
 										System.out.println("Error! - Variable no declarada / Tipos de datos incorrecto");
 								:};
-						
+/*---------------------------------------------------------------------------------------------------------------------------------*/						
 sent_if					::=	IF expresion_compuesta THEN NEW_LINE 
 								secuencia_sent NEW_LINE
 								ENDIF
@@ -500,18 +505,50 @@ list_param				::= list_param COMMA tipo_dato ID
 						
 call_proc				::= ID LPAREN list_var RPAREN
 							| ID LPAREN RPAREN;						
-
-expresion_compuesta		::=	expresion_compuesta op_logico expresion_comparacion
-						| expresion_comparacion;
-						
-op_logico				::=	AND | OR;
-
-expresion_comparacion	::=	NOT expresion_simple op_comparacion expresion_simple
-							| expresion_simple op_comparacion expresion_simple;
-							
-op_comparacion			::=	EQUAL | DIFFERENT
-							| LESS_THAN | LESS_THAN_EQ
-							| GREATER_THAN | GREATER_THAN_EQ;
+/*-----------------------------------------------------------------------------------------------------------------------------*/
+expresion_compuesta		::=	expresion_compuesta:exp1 op_logico:op expresion_comparacion:exp2
+								{:
+									Comparacion tmp = new Comparacion(op);
+									tmp.add(exp1);
+									tmp.add(exp2);
+									tmp.calcular(op);
+									
+									RESULT = tmp;
+								:}
+						| expresion_comparacion:exp
+							{:
+								RESULT = exp;
+							:};
+/*-----------------------------------------------------------------------------------------------------------------------------*/						
+op_logico				::=	AND {: RESULT = OP_LOGICO.Y; :}
+							| OR {: RESULT = OP_LOGICO.O; :};
+/*-----------------------------------------------------------------------------------------------------------------------------*/
+expresion_comparacion	::=	NOT expresion_simple:exp1 op_comparacion:op expresion_simple:exp2
+								{:
+									Comparacion tmp = new Comparacion(op);
+									tmp.add(exp1);
+									tmp.add(exp2);
+									tmp.calcular(op);
+									tmp.setNot();
+									
+									RESULT = tmp;
+								:}
+							| expresion_simple:exp1 op_comparacion:op expresion_simple:exp2
+								{:
+									Comparacion tmp = new Comparacion(op);
+									tmp.add(exp1);
+									tmp.add(exp2);
+									tmp.calcular(op);									
+									
+									RESULT = tmp;								
+								:};
+/*-----------------------------------------------------------------------------------------------------------------------------*/							
+op_comparacion			::=	EQUAL {: RESULT = OP_COMPARACION.IGUAL_A; :}
+							| DIFFERENT {: RESULT = OP_COMPARACION.DIFERENTE_A; :}
+							| LESS_THAN {: RESULT = OP_COMPARACION.MENOR_A; :}
+							| LESS_THAN_EQ {: RESULT = OP_COMPARACION.MENOR_IGUAL_A; :}
+							| GREATER_THAN {: RESULT = OP_COMPARACION.MAYOR_A; :}
+							| GREATER_THAN_EQ {: RESULT = OP_COMPARACION.MAYOR_IGUAL_A; :};
 
 /*-----------------------------------------------------------------------------------------------------------------------------*/
 expresion_simple	::= expresion_simple:exp op_suma:operando term:term 

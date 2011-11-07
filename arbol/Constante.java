@@ -1,13 +1,13 @@
 package arbol;
 
 public class Constante extends Nodo {
+
+	Object valor;
 	
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
-	Object valor;
 	
 	public Constante(Object valor) {
 		super(TIPO.CONSTANTE);

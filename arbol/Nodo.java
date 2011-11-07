@@ -9,11 +9,6 @@ import java.util.Date;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 public class Nodo extends DefaultMutableTreeNode {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-
 	public enum TIPO {
 		_PROGRAMA_, sub_programa, secuencia_sent, sentencia, sent_declaracion, tipo_dato, 
 		list_var, sent_asignacion, sent_escribir, list_impresion, sent_leer, sent_if, 
@@ -26,6 +21,12 @@ public class Nodo extends DefaultMutableTreeNode {
 	BufferedWriter buf;
 	
 	TIPO tiponodo;
+
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	public Nodo(TIPO tiponodo) {
 		// TODO Auto-generated constructor stub

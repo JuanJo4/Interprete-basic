@@ -1,4 +1,4 @@
-' Suma de dos numeros
+'	Suma de dos numeros
 
 INTEGER edad[2]
 STRING nombre[2],credito

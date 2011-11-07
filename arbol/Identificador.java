@@ -2,13 +2,13 @@ package arbol;
 
 public class Identificador extends Nodo {
 
+	String namevar;
+	int tam;
+	
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-
-	String namevar;
-	int tam;
 
 	public Identificador(String namevar) {
 		super(TIPO.IDENTIFICADOR);

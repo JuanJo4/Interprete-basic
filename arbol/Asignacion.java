@@ -1,15 +1,13 @@
 package arbol;
 
 public class Asignacion extends Nodo {
-
+	String namevar;
+	int pos;
+	
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-
-	String namevar;
-	int pos;
-	
 	public Asignacion(String namevar,Nodo hijo) {
 		super(TIPO.sent_asignacion);
 		this.add(hijo);

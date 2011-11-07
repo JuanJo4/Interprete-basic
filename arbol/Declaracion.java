@@ -3,14 +3,13 @@ package arbol;
 import arbol.Variable.DATO;
 
 public class Declaracion extends Nodo {
-
+	DATO tipodato;
+	
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
-	DATO tipodato;
-	
 	public Declaracion(DATO tipodato, Nodo listvar) {
 		super(TIPO.sent_declaracion);
 		this.tipodato = tipodato;
