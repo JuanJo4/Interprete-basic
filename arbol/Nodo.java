@@ -37,6 +37,7 @@ public class Nodo extends DefaultMutableTreeNode {
 		return tiponodo;
 	}
 	
+	
 	public void printTree() throws IOException {
 		Date fecha = new Date();
 		

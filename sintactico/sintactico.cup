@@ -184,20 +184,17 @@ programa				::= secuencia_sent:secuencia NEW_LINE END
 /*---------------------------------------------------------------------------------------------------------------------------------*/						
 sub_programa			::= sub_programa:sub NEW_LINE def_proc:proc
 								{:
-									/*Nodo tmp = new Nodo(TIPO.sub_programa);
+									Nodo tmp = new Nodo(TIPO.sub_programa);
 									tmp.add(sub);
 									tmp.add(proc);
 									
-									RESULT = tmp;
-									*/
+									RESULT = tmp;									
 								:}
 							| def_proc:proc
-								{:
-								/*
+								{:								
 									Nodo tmp = new Nodo(TIPO.sub_programa);
 									tmp.add(proc);
-									RESULT = tmp;
-									*/
+									RESULT = tmp;									
 								:};
 /*---------------------------------------------------------------------------------------------------------------------------------*/							
 secuencia_sent			::= secuencia_sent:secuencia NEW_LINE sentencia:sent
@@ -233,7 +230,7 @@ sentencia				::= sent_declaracion:declaracion
 								:}
 							| sent_if:decision
 								{:
-									//RESULT = decision;
+									RESULT = decision;
 								:}
 							| sent_for:buclepara
 								{:
@@ -469,15 +466,21 @@ sent_leer				::=	INPUT ID:id
 										System.out.println("Error! - Variable no declarada / Tipos de datos incorrecto");
 								:};
 /*---------------------------------------------------------------------------------------------------------------------------------*/						
-sent_if					::=	IF expresion_compuesta THEN NEW_LINE 
-								secuencia_sent NEW_LINE
+sent_if					::=	IF expresion_compuesta:cond THEN NEW_LINE 
+								secuencia_sent:verdadero NEW_LINE
 								ENDIF
-							| IF expresion_compuesta THEN NEW_LINE 
-								secuencia_sent NEW_LINE 
+								{:
+									RESULT = new Condicion(((Comparacion) cond).getValor(),verdadero);								
+								:}
+							| IF expresion_compuesta:cond THEN NEW_LINE 
+								secuencia_sent:verdadero NEW_LINE 
 								ELSE NEW_LINE
-								secuencia_sent NEW_LINE
-								ENDIF;
-
+								secuencia_sent:falso NEW_LINE
+								ENDIF
+									{:
+											RESULT = new Condicion(((Comparacion) cond).getValor(),verdadero,falso);
+									:};
+/*---------------------------------------------------------------------------------------------------------------------------------*/	
 sent_for				::= FOR ID ASSIGN expresion_simple TO expresion_simple NEW_LINE
 								secuencia_sent NEW_LINE
 								NEXT ID
@@ -570,10 +573,10 @@ expresion_simple	::= expresion_simple:exp op_suma:operando term:term
 							{:
 								RESULT = term;
 							:};
-						
+/*---------------------------------------------------------------------------------------------------------------------------------*/							
 op_suma				::=	PLUS {: RESULT = OP.SUMA; :}
 						| MINUS {: RESULT = OP.RESTA; :};
-
+/*---------------------------------------------------------------------------------------------------------------------------------*/	
 term				::= term:term op_mult:operando factor:fac
 							{:
 								Operacion tmp = new Operacion(operando);
@@ -587,19 +590,18 @@ term				::= term:term op_mult:operando factor:fac
 										tmp.calcular();
 										
 										RESULT = tmp;
-									}					
-								
+									}													
 							:}							
 						| factor:factor
 							{:
 								RESULT = factor;
 							:};
-						
+/*---------------------------------------------------------------------------------------------------------------------------------*/							
 op_mult				::=	ASTERISK {: RESULT = OP.MULTIPLICACION; :}
 						| SLASH {:	RESULT = OP.DIVISION; :}
 						| MODULE {:	RESULT = OP.MODULO; :}
 						| CIRCUMFLEX {:	RESULT = OP.POTENCIA; :};
-
+/*---------------------------------------------------------------------------------------------------------------------------------*/	
 factor				::= LPAREN expresion_simple:exp RPAREN
 							{:
 								RESULT = exp;
